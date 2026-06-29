@@ -116,6 +116,15 @@ The program automatically generates:
 
 ## Example Outputs
 
+<img width="1381" height="919" alt="Figure_1" src="https://github.com/user-attachments/assets/6dfbf8c4-bdac-41d5-9d13-631dc6d2e60e" />
+<img width="821" height="913" alt="Figure_2" src="https://github.com/user-attachments/assets/49eef7ed-5d1e-4f45-9704-6d0c286ca898" />
+<img width="821" height="913" alt="Figure_3" src="https://github.com/user-attachments/assets/6f852b2c-ea51-4963-90e6-85b03ea36268" />
+<img width="1381" height="919" alt="Figure_4" src="https://github.com/user-attachments/assets/81406194-de4e-4656-a1ab-0dfb4851af32" />
+<img width="905" height="885" alt="Figure_5" src="https://github.com/user-attachments/assets/e9598c52-14c4-4e5f-bbea-e7cef7abcdeb" />
+<img width="1229" height="877" alt="Figure_6" src="https://github.com/user-attachments/assets/27c1ff7b-4f9f-48c6-a44b-051cbe4f4ec2" />
+<img width="1414" height="881" alt="Figure_7" src="https://github.com/user-attachments/assets/1907f43e-880e-4461-8e49-6193824f722e" />
+<img width="1392" height="911" alt="Figure_8" src="https://github.com/user-attachments/assets/85231794-76fb-4af9-a888-75db56abae4a" />
+
 The simulation produces:
 
 - 📈 Vertical radiation pattern
@@ -125,7 +134,7 @@ The simulation produces:
 - 📏 Peak antenna gain
 - 📐 3 dB beamwidth
 
-> **Note:** Add screenshots of the generated plots here after running the simulation.
+
 
 ---
 
