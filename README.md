@@ -1,12 +1,12 @@
 # ITU-R M.2101 Active Antenna System (AAS) MATLAB Implementation
 
-A MATLAB implementation of the **ITU-R M.2101 Active Antenna System (AAS)** antenna model for **5G NR/mmWave** systems. This project simulates configurable **Uniform Planar Arrays (UPAs)** with beam steering, element radiation patterns, array factors, composite antenna gain, 2D radiation cuts, polar plots, and 3D radiation pattern visualization.
+A MATLAB implementation of the **ITU-R M.2101 Active Antenna System (AAS)** antenna model for **5G NR/mmWave** systems. This project simulates configurable **Uniform Planar Arrays (UPAs)** with electronic beam steering, element radiation patterns, array factors, composite antenna gain, 2D radiation cuts, polar plots, and 3D radiation pattern visualization.
 
 ---
 
 ## Features
 
-- 📡 Configurable M × N Uniform Planar Array
+- 📡 Configurable **M × N Uniform Planar Array (UPA)**
 - 🎯 Electronic beam steering (Elevation & Azimuth)
 - 📈 ITU-R M.2101 element radiation pattern
 - 📊 Beamforming weight generation
@@ -23,7 +23,7 @@ A MATLAB implementation of the **ITU-R M.2101 Active Antenna System (AAS)** ante
 
 ## Repository Structure
 
-```
+```text
 ITU-R-M2101-Antenna/
 │
 ├── main.m                  % Driver script
@@ -34,6 +34,7 @@ ITU-R-M2101-Antenna/
 ├── verticalCut.m           % Vertical radiation pattern
 ├── horizontalCut.m         % Horizontal radiation pattern
 ├── pattern3D.m             % 3D radiation pattern
+├── LICENSE
 └── README.md
 ```
 
@@ -41,40 +42,40 @@ ITU-R-M2101-Antenna/
 
 ## Antenna Model
 
-The implementation follows the antenna model described in **ITU-R M.2101**, consisting of
+The implementation follows the **ITU-R M.2101** antenna model consisting of:
 
 - Element Radiation Pattern
 - Beamforming Weights
 - Uniform Planar Array Factor
 - Composite Antenna Gain
 
-The peak antenna gain is computed automatically as
+The maximum antenna gain is automatically computed as
 
-\[
+```math
 G_{\max}=G_E+10\log_{10}(MN)
-\]
+```
 
 where
 
-- \(G_E\) = Element gain (dBi)
-- \(M\) = Number of vertical elements
-- \(N\) = Number of horizontal elements
+- $G_E$ = Element gain (dBi)
+- $M$ = Number of vertical antenna elements
+- $N$ = Number of horizontal antenna elements
 
 ---
 
 ## Default Parameters
 
-| Parameter | Value |
-|-----------|------:|
-| Vertical Elements | 16 |
-| Horizontal Elements | 16 |
+| Parameter | Default Value |
+|-----------|--------------:|
+| Vertical Elements (M) | 16 |
+| Horizontal Elements (N) | 16 |
 | Element Spacing | 0.5 λ |
 | Element Gain | 5 dBi |
 | Vertical HPBW | 65° |
 | Horizontal HPBW | 65° |
 | Vertical Side-lobe Attenuation | 30 dB |
 | Front-to-Back Attenuation | 30 dB |
-| Maximum Antenna Gain | Automatically computed |
+| Maximum Gain | Automatically Computed |
 
 ---
 
@@ -84,14 +85,14 @@ The beam can be steered in both elevation and azimuth.
 
 ```matlab
 params.thetaScan = 0;
-params.phiScan = 0;
+params.phiScan   = 0;
 ```
 
-Example
+Example:
 
 ```matlab
 params.thetaScan = 15;
-params.phiScan = -20;
+params.phiScan   = -20;
 ```
 
 ---
@@ -104,7 +105,7 @@ Open MATLAB and execute
 main
 ```
 
-The script automatically generates
+The program automatically generates:
 
 - Vertical radiation pattern
 - Horizontal radiation pattern
@@ -115,102 +116,172 @@ The script automatically generates
 
 ## Example Outputs
 
-The simulation produces
+The simulation produces:
 
-- Cartesian radiation patterns
-- Polar radiation patterns
-- 3D radiation pattern
-- Peak antenna gain
-- 3 dB beamwidth
+- 📈 Vertical radiation pattern
+- 📈 Horizontal radiation pattern
+- 🌀 Polar radiation plots
+- 🌍 3D radiation pattern
+- 📏 Peak antenna gain
+- 📐 3 dB beamwidth
+
+> **Note:** Add screenshots of the generated plots here after running the simulation.
 
 ---
 
-## Mathematical Model
+# Mathematical Model
 
-### Element Pattern
+## Element Radiation Pattern
 
-Vertical attenuation
+### Vertical Element Attenuation
 
-\[
+```math
 A_{E,V}(\theta)
 =
--\min
-\left[
-12\left(\frac{\theta}{\theta_{3dB}}\right)^2,
+-\min\left[
+12\left(\frac{\theta}{\theta_{3\mathrm{dB}}}\right)^2,
 SLA_V
 \right]
-\]
+```
 
-Horizontal attenuation
+### Horizontal Element Attenuation
 
-\[
+```math
 A_{E,H}(\phi)
 =
--\min
-\left[
-12\left(\frac{\phi}{\phi_{3dB}}\right)^2,
+-\min\left[
+12\left(\frac{\phi}{\phi_{3\mathrm{dB}}}\right)^2,
 A_m
 \right]
-\]
+```
 
-Element gain
+### Combined Element Pattern
 
-\[
+```math
+A_E(\theta,\phi)
+=
+\min
+\left(
+-\left(A_{E,V}+A_{E,H}\right),
+A_m
+\right)
+```
+
+### Element Gain
+
+```math
 G_E(\theta,\phi)
 =
 G_{E,\max}
 -
 A_E(\theta,\phi)
-\]
+```
 
 ---
 
-### Beamforming
+## Beamforming Weights
 
-Complex beamforming weights
+The complex beamforming weights are
 
-\[
+```math
 w_{m,n}
 =
-e^{-j2\pi(md_vu_0+nd_hv_0)}
-\]
+e^{-j2\pi\left(md_vu_0+nd_hv_0\right)}
+```
+
+where
+
+```math
+u_0=\sin(\theta_0)\cos(\phi_0)
+```
+
+```math
+v_0=\sin(\theta_0)\sin(\phi_0)
+```
 
 ---
 
-### Array Factor
+## Array Factor
 
-\[
-AF
+The normalized array factor is
+
+```math
+AF(\theta,\phi)
 =
+\frac{1}{\sqrt{MN}}
+\left|
 \sum_{m=0}^{M-1}
 \sum_{n=0}^{N-1}
 w_{m,n}
 e^{j2\pi(md_vu+nd_hv)}
-\]
+\right|
+```
+
+where
+
+```math
+u=\sin(\theta)\cos(\phi)
+```
+
+```math
+v=\sin(\theta)\sin(\phi)
+```
 
 ---
 
-### Composite Gain
+## Composite Antenna Gain
 
-\[
-G
+The composite antenna gain is computed as
+
+```math
+G(\theta,\phi)
 =
-G_E
+G_E(\theta,\phi)
 +
-20\log_{10}(AF)
-\]
+20\log_{10}\left(AF(\theta,\phi)\right)
+```
+
+The overall gain is limited by
+
+```math
+G(\theta,\phi)\le G_{\max}
+```
+
+---
+
+## Automatic Peak Gain Calculation
+
+The peak gain for an **M × N** planar array is
+
+```math
+G_{\max}
+=
+G_{\mathrm{element}}
++
+10\log_{10}(MN)
+```
+
+Example values:
+
+| Array Size | Peak Gain |
+|------------|----------:|
+| 4 × 4 | 17.04 dBi |
+| 8 × 8 | 23.06 dBi |
+| 16 × 16 | 29.08 dBi |
+| 32 × 32 | 35.10 dBi |
 
 ---
 
 ## Applications
 
-This implementation can be used for
+This project can be used for:
 
 - 5G NR antenna modeling
 - mmWave communication research
+- Active Antenna System (AAS) simulation
 - Beamforming algorithm validation
 - Antenna radiation pattern visualization
-- Wireless system simulations
+- Wireless communication simulations
 - Academic coursework
 - Research and coexistence studies
 
@@ -219,7 +290,7 @@ This implementation can be used for
 ## Requirements
 
 - MATLAB R2020a or later
-- No additional toolboxes required
+- No additional MATLAB toolboxes required
 
 ---
 
@@ -228,21 +299,25 @@ This implementation can be used for
 - Multiple beam support
 - Hybrid beamforming
 - Amplitude tapering
-- Beam scanning animations
-- Side-lobe suppression algorithms
+- Side-lobe suppression
+- Beam scanning animation
 - Grating lobe visualization
-- 3GPP TR 38.901 antenna models
-- Export radiation patterns to CSV
+- 3GPP TR 38.901 antenna model
+- Pattern export to CSV
+- Interactive GUI
 
 ---
 
 ## References
 
-1. ITU-R Recommendation M.2101 – *Modelling and simulation of IMT networks and systems for use in sharing and compatibility studies.*
+1. **ITU-R Recommendation M.2101**  
+   *Modelling and simulation of IMT networks and systems for use in sharing and compatibility studies.*
 
-2. 3GPP TS 38.104 – *NR Base Station Radio Transmission and Reception.*
+2. **3GPP TS 38.104**  
+   *NR Base Station (BS) Radio Transmission and Reception.*
 
-3. 3GPP TS 38.141-2 – *NR Base Station Conformance Testing.*
+3. **3GPP TS 38.141-2**  
+   *NR Base Station Conformance Testing.*
 
 ---
 
@@ -251,7 +326,7 @@ This implementation can be used for
 **Aditya S. Chandra**
 
 M.Tech, Telecommunication Technology & Management  
-Indian Institute of Technology Delhi
+**Indian Institute of Technology Delhi**
 
 GitHub: https://github.com/AdityaSChandra31
 
@@ -259,20 +334,28 @@ GitHub: https://github.com/AdityaSChandra31
 
 ## License
 
-This project is released under the MIT License.
+This project is licensed under the **MIT License**.
 
-Feel free to use, modify, and cite this repository for academic and research purposes.
+You are free to use, modify, and distribute this software for academic and research purposes.
 
 ---
 
 ## Contributing
 
-Contributions are welcome.
+Contributions are welcome!
 
-If you would like to improve the implementation, fix bugs, or add new features, please open an issue or submit a pull request.
+If you find a bug, have an improvement, or would like to add a new feature, feel free to:
+
+- Open an Issue
+- Submit a Pull Request
+- Suggest enhancements
 
 ---
 
-## ⭐ Support
+## Star this Repository ⭐
 
-If you find this repository useful, consider giving it a **⭐ Star** on GitHub. It helps others discover the project and supports future development.
+If you found this project useful, please consider giving it a **⭐ Star** on GitHub. It helps others discover the repository and supports future development.
+
+---
+
+**Keywords:** MATLAB, ITU-R M.2101, Active Antenna System, AAS, Beamforming, Uniform Planar Array, UPA, 5G NR, mmWave, Phased Array, Antenna Pattern, Radiation Pattern.
